@@ -94,11 +94,15 @@ class Cleaner:
             "mul": operator.mul,
             "div": operator.truediv
         }
-        op = switcher.get(operation, "Invalid operator")
+        op = switcher.get(operation)
+        if op is None:
+            raise ValueError("Invalid operation '{}', expected one of: {}".format(
+                operation, ", ".join(switcher)))
         try:
-            self.data.frame[new_label] = op(self.data.frame[a], self.data.frame[b])
-        except:
-            self.data.frame[new_label] = op(self.data.frame[a], b)
+            other = self.data.frame[b]
+        except (KeyError, TypeError):
+            other = b  # b is a plain value, not a column label
+        self.data.frame[new_label] = op(self.data.frame[a], other)
 
     def map_data(self, mapper, label_1, label_2=None):
         mapper = mapper.astype(str)  # stringify <null> data to compare "=="

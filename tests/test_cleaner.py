@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from clean_panda import Cleaner
 
@@ -56,3 +57,21 @@ def test_remove_by_condition_after_keep():
     clean.keep_by_condition(clean.data.frame.age > 30)
     clean.remove_by_condition(clean.data.frame.sex == 'male')
     assert list(clean.data.frame['name']) == ['Olivia', 'Kate']
+
+
+def test_operator_feat_with_column():
+    clean = Cleaner(df)
+    clean.operator_feat('age', 'age', 'add', 'double')
+    assert clean.data.frame['double'][0] == 64
+
+
+def test_operator_feat_with_value():
+    clean = Cleaner(df)
+    clean.operator_feat('age', 2, 'mul', 'double')
+    assert clean.data.frame['double'][0] == 64
+
+
+def test_operator_feat_invalid_operation():
+    clean = Cleaner(df)
+    with pytest.raises(ValueError):
+        clean.operator_feat('age', 2, 'pow', 'oops')
