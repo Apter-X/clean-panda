@@ -22,3 +22,14 @@ def test_keep_features():
     clean = Cleaner(dataframe=df)
     clean.keep_features(['sex'])
     assert clean.data.frame.columns == ['sex']
+
+
+def test_dataframe_given_positionally():
+    clean = Cleaner(df)
+    assert clean.data.frame['name'][0] == 'Olivia'
+
+
+def test_data_given_positionally():
+    data = Cleaner(dataframe=df).data
+    clean = Cleaner(data)
+    assert clean.data is data

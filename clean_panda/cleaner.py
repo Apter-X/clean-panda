@@ -6,8 +6,10 @@ from clean_panda.data import Data, np
 
 class Cleaner:
     def __init__(self, data=None, dataframe=None, columns=None):
-        if data:
+        if isinstance(data, Data):
             self.data = data
+        elif data is not None:
+            self.data = Data(data, columns=columns)  # dataframe given positionally
         else:
             self.data = Data(dataframe, columns=columns)
 
