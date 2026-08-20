@@ -16,7 +16,8 @@ class Cleaner:
     def normalize_text(self, arr_labels, unicode="NFC"):
         """ Normalize textual column """
         for n in arr_labels:
-            self.data.frame[n] = self.data.frame[n].map(lambda x: unicodedata.normalize(unicode, x).upper())
+            self.data.frame[n] = self.data.frame[n].map(
+                lambda x: unicodedata.normalize(unicode, x).upper() if isinstance(x, str) else x)
 
     def remove_features(self, arr_labels):
         """ Remove irrelevant features """
@@ -38,7 +39,8 @@ class Cleaner:
         """ Replace string or multiple strings with a new string """
         for n in arr_labels:
             for s in arr_str:
-                self.data.frame[n] = self.data.frame[n].map(lambda x: x.replace(s, new_str))
+                self.data.frame[n] = self.data.frame[n].map(
+                    lambda x: x.replace(s, new_str) if isinstance(x, str) else x)
 
     def replace_values(self, arr_values, new_value):
         """ Replace value or multiple values with a new value """
