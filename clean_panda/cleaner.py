@@ -22,7 +22,7 @@ class Cleaner:
 
     def keep_features(self, arr_labels, axis=1, inplace=True):
         """ Keep relevant features """
-        self.data.frame.drop(self.data.frame.columns.difference(arr_labels), axis, inplace=inplace)
+        self.data.frame.drop(self.data.frame.columns.difference(arr_labels), axis=axis, inplace=inplace)
 
     def remove_duplicates(self, arr_labels, keep="first"):
         """ Remove duplicates and keep by default the first one """
