@@ -31,8 +31,7 @@ class Data:
 
     def append_data(self, arr_data):
         """ Concatenate the existing data with the array of dataframe """
-        arr_data.append(self.frame)
-        self.frame = pd.concat(arr_data)
+        self.frame = pd.concat(list(arr_data) + [self.frame])
 
     def export_to_csv(self, path, encoding='utf-8', index=False):
         """ Export the dataframe as a csv file """

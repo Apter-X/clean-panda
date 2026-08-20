@@ -22,6 +22,13 @@ def test_append_data():
     assert data.frame.count().values[0] == 10
 
 
+def test_append_data_keeps_the_given_array_intact():
+    data = Data(dataframe=df)
+    arr_data = [Data(dataframe=df2).frame]
+    data.append_data(arr_data)
+    assert len(arr_data) == 1
+
+
 def test_get_value():
     data = Data(dataframe=df)
     assert data.get_value('age', data.frame.name == 'Jane') == 28
