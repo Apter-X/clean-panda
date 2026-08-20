@@ -61,33 +61,42 @@ class Cleaner:
             self.data.frame[n] = self.data.frame[n].astype(new_type)
 
     def apply_row_rule(self, new_label, rule):
+        """ Build a new column by applying a rule to every whole row """
         self.data.frame[new_label] = self.data.frame.apply(rule, axis=1)
 
     def apply_rule_out(self, label, rule, new_label):
+        """ Build a new column by applying a rule to an existing one """
         self.data.frame[new_label] = self.data.frame[label].apply(rule)
 
     def apply_rule(self, arr_label, rule):
+        """ Apply a rule to a column or multiple columns, in place """
         for n in arr_label:
             self.data.frame[n] = self.data.frame[n].apply(rule)
 
     def merge_data(self, new_data, on, how="outer"):
+        """ Merge another dataframe on a common column """
         self.data.frame = self.data.frame.merge(new_data, on=on, how=how)
 
     def remove_by_condition(self, condition):
+        """ Remove every rows matching the condition """
         self.data.frame = self.data.frame.drop(self.data.frame[condition].index)
 
     def keep_by_condition(self, condition):
+        """ Keep only the rows matching the condition """
         self.data.frame = self.data.frame[condition]
 
     def keep_what_is_in(self, arr_values, arr_label):
+        """ Keep only the rows holding one of the values, for every column given """
         for label in arr_label:
             self.data.frame = self.data.frame[self.data.frame[label].isin(arr_values)]
 
     def round_data(self, arr_labels, by=None):
+        """ Round a numeric column or multiple columns """
         for n in arr_labels:
             self.data.frame[n] = round(self.data.frame[n], by)
 
     def operator_feat(self, a, b, operation, new_label):
+        """ Build a new column from a column and another column or a value """
         switcher = {
             "add": operator.add,
             "sub": operator.sub,
@@ -105,6 +114,7 @@ class Cleaner:
         self.data.frame[new_label] = op(self.data.frame[a], other)
 
     def map_data(self, mapper, label_1, label_2=None):
+        """ Replace values of one or two columns following a mapping dataframe """
         mapper = mapper.astype(str)  # stringify <null> data to compare "=="
         if label_2:
             for old_1, old_2, new_1, new_2 in zip(mapper[mapper.columns[0]], mapper[mapper.columns[1]],
@@ -119,10 +129,12 @@ class Cleaner:
         self.replace_values(['nan'], np.nan)  # reestablish stringified nan to <null>
 
     def get_cluster_by_label(self, arr_label):
+        """ Get the dataframe with a 'nb' column counting the rows of every group """
         cluster = self.data.frame.groupby(arr_label).size().reset_index(name='nb')
         return self.data.frame.merge(cluster, on=arr_label)
 
     def remove_by_cluster(self, arr_label, min_model):
+        """ Remove the rows belonging to a group smaller than min_model """
         self.data.frame = self.get_cluster_by_label(arr_label)
         self.data.frame = self.data.frame[self.data.frame['nb'] > min_model]
         self.data.frame = self.data.frame.drop(['nb'], axis=1)

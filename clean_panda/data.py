@@ -42,11 +42,14 @@ class Data:
         self.frame.to_excel(path)
 
     def get_value(self, of, where):
+        """ Get the value of a column on the first row matching the condition """
         return self.frame.loc[where, of].iloc[0]
 
     def get_rows(self, where):
+        """ Get every rows matching the condition """
         return self.frame.loc[where]
 
     def get_filter_by_values(self, arr_value):
+        """ Get every rows holding one of the values, the first column aside """
         matched = self.frame.iloc[:, 1:].isin(arr_value).any(axis=1)
         return self.frame[matched]
