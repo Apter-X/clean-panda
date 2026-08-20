@@ -7,6 +7,8 @@
 $ pip install clean-panda
 ```
 
+Requires Python 3.7+ and pandas. Tested from pandas 1.5 up to pandas 3.0.
+
 ## Basic Usage
 
 ```python
@@ -60,6 +62,15 @@ print(clean.data.frame)
 6    KATE   55  FEMALE
 ```
 
+`clean.data.frame` is a plain `pandas.DataFrame`, so every pandas method stays
+available at any moment. The dataframe can also be named explicitly, and its
+columns given aside:
+
+```python
+clean = Cleaner(dataframe=df)
+clean = Cleaner(dataframe=rows, columns=['name', 'age', 'sex'])
+```
+
 ## Interface
 
     ├── Cleaner
@@ -100,6 +111,13 @@ print(clean.data.frame)
             ├── Frame //pandas methods
             │   ├── ...
     
+## Tests
+
+```shell
+$ pip install -r requirements.txt
+$ pytest tests
+```
+
 ## License
 
 MIT License
