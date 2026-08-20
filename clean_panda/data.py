@@ -1,15 +1,17 @@
 import numpy as np
 import pandas as pd
 
+from clean_panda._legacy import attach_legacy_names
+
 
 class Data:
     def __init__(self, dataframe=None, columns=None):
         self.frame = pd.DataFrame(dataframe, columns=columns)
 
-    def get_fetch(self, fetched_data):
-        """ Get dataframe from a database """
-        rows = pd.DataFrame(list(fetched_data), columns=self.frame.columns)
-        self.frame = pd.concat([self.frame, rows], ignore_index=True)
+    def import_rows(self, rows):
+        """ Add rows fetched from a database to the dataframe """
+        fetched = pd.DataFrame(list(rows), columns=self.frame.columns)
+        self.frame = pd.concat([self.frame, fetched], ignore_index=True)
 
     def import_csv(self, path, low_memory=False):
         """ Set dataframe from a csv file """
@@ -21,13 +23,13 @@ class Data:
         self.frame = pd.read_json(path)
         return self.frame
 
-    def duplicate_data(self, n):
-        """ Duplicate data existing in the dataframe """
-        self.frame = pd.concat([self.frame] * n)
+    def repeat_rows(self, times):
+        """ Repeat every row of the dataframe a number of times """
+        self.frame = pd.concat([self.frame] * times)
 
-    def append_data(self, arr_data):
+    def concat_frames(self, arr_frames):
         """ Concatenate the existing data with the array of dataframe """
-        self.frame = pd.concat(list(arr_data) + [self.frame])
+        self.frame = pd.concat(list(arr_frames) + [self.frame])
 
     def export_to_csv(self, path, encoding='utf-8', index=False):
         """ Export the dataframe as a csv file """
@@ -41,7 +43,7 @@ class Data:
         """ Export the dataframe as a xlsx file """
         self.frame.to_excel(path)
 
-    def get_value(self, of, where):
+    def get_first_value(self, of, where):
         """ Get the value of a column on the first row matching the condition """
         return self.frame.loc[where, of].iloc[0]
 
@@ -49,7 +51,25 @@ class Data:
         """ Get every rows matching the condition """
         return self.frame.loc[where]
 
-    def get_filter_by_values(self, arr_value):
+    def get_rows_by_values(self, arr_values):
         """ Get every rows holding one of the values, the first column aside """
-        matched = self.frame.iloc[:, 1:].isin(arr_value).any(axis=1)
+        matched = self.frame.iloc[:, 1:].isin(arr_values).any(axis=1)
         return self.frame[matched]
+
+
+LEGACY_NAMES = {
+    "get_fetch": "import_rows",
+    "duplicate_data": "repeat_rows",
+    "append_data": "concat_frames",
+    "get_value": "get_first_value",
+    "get_filter_by_values": "get_rows_by_values",
+}
+
+LEGACY_ARGUMENTS = {
+    "get_fetch": {"fetched_data": "rows"},
+    "duplicate_data": {"n": "times"},
+    "append_data": {"arr_data": "arr_frames"},
+    "get_filter_by_values": {"arr_value": "arr_values"},
+}
+
+attach_legacy_names(Data, LEGACY_NAMES, LEGACY_ARGUMENTS)
