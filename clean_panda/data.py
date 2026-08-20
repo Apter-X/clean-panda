@@ -18,16 +18,12 @@ class Data:
 
     def import_json(self, path):
         """ Set dataframe from a json file """
-        self.frame = pd.read_json(path, )
+        self.frame = pd.read_json(path)
         return self.frame
 
     def duplicate_data(self, n):
         """ Duplicate data existing in the dataframe """
-        duplicate = [pd.DataFrame()]
-        while n > 0:
-            duplicate.append(self.frame)
-            n -= 1
-        self.frame = pd.concat(duplicate)
+        self.frame = pd.concat([self.frame] * n)
 
     def append_data(self, arr_data):
         """ Concatenate the existing data with the array of dataframe """
@@ -46,14 +42,10 @@ class Data:
         self.frame.to_excel(path)
 
     def get_value(self, of, where):
-        row = self.frame.loc[where]
-        row_index = row[of].index[0]
-        value = self.frame[of][row_index]
-        return value
+        return self.frame.loc[where, of].iloc[0]
 
     def get_rows(self, where):
-        row = self.frame.loc[where]
-        return row
+        return self.frame.loc[where]
 
     def get_filter_by_values(self, arr_value):
         matched = self.frame.iloc[:, 1:].isin(arr_value).any(axis=1)
