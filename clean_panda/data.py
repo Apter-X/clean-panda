@@ -8,8 +8,8 @@ class Data:
 
     def get_fetch(self, fetched_data):
         """ Get dataframe from a database """
-        for row in fetched_data:
-            self.frame.loc[len(self.frame.index)] = row
+        rows = pd.DataFrame(list(fetched_data), columns=self.frame.columns)
+        self.frame = pd.concat([self.frame, rows], ignore_index=True)
 
     def import_csv(self, path, low_memory=False):
         """ Set dataframe from a csv file """

@@ -9,6 +9,13 @@ df2 = {'name': ['Diana', 'Clark', 'Kent'],
        'sex': ['female', 'male', 'male']}
 
 
+def test_get_fetch():
+    data = Data(columns=['name', 'age', 'sex'])
+    data.get_fetch([('Diana', 32, 'female'), ('Clark', 23, 'male')])
+    assert list(data.frame['name']) == ['Diana', 'Clark']
+    assert list(data.frame.index) == [0, 1]
+
+
 def test_duplicate_data():
     data = Data(dataframe=df)
     data.duplicate_data(2)
