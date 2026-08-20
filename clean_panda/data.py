@@ -57,5 +57,5 @@ class Data:
         return row
 
     def get_filter_by_values(self, arr_value):
-        filter_result = self.frame.loc[np.where(self.frame.iloc[:, 1:].isin(arr_value) == True)[0]]
-        return filter_result
+        matched = self.frame.iloc[:, 1:].isin(arr_value).any(axis=1)
+        return self.frame[matched]

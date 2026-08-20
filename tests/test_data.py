@@ -37,3 +37,15 @@ def test_get_filter_by_values():
     data = Data(dataframe=df)
     values = data.get_filter_by_values(['male'])
     assert values.values[3][0] == 'Tom'
+
+
+def test_get_filter_by_values_after_filtering():
+    data = Data(dataframe=df)
+    data.frame = data.frame[data.frame.age > 30]  # index is no longer 0..n
+    values = data.get_filter_by_values(['male'])
+    assert list(values['name']) == ['Alex', 'Jon']
+
+
+def test_get_filter_by_values_does_not_repeat_rows():
+    data = Data(dataframe={'name': ['Dean'], 'a': ['x'], 'b': ['x']})
+    assert len(data.get_filter_by_values(['x'])) == 1
