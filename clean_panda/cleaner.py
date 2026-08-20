@@ -74,7 +74,7 @@ class Cleaner:
         self.data.frame = self.data.frame.merge(new_data, on=on, how=how)
 
     def remove_by_condition(self, condition):
-        self.data.frame.drop(self.data.frame[condition].index, inplace=True)
+        self.data.frame = self.data.frame.drop(self.data.frame[condition].index)
 
     def keep_by_condition(self, condition):
         self.data.frame = self.data.frame[condition]

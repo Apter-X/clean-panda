@@ -49,3 +49,10 @@ def test_replace_str_keeps_null():
     clean.replace_str(['name'], ['-'], '')
     assert clean.data.frame['name'][0] == 'Olivia'
     assert pd.isna(clean.data.frame['name'][1])
+
+
+def test_remove_by_condition_after_keep():
+    clean = Cleaner(df)
+    clean.keep_by_condition(clean.data.frame.age > 30)
+    clean.remove_by_condition(clean.data.frame.sex == 'male')
+    assert list(clean.data.frame['name']) == ['Olivia', 'Kate']
